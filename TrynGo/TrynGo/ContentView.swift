@@ -12,78 +12,77 @@ struct ContentView: View {
     @State private var password: String = ""
     @State private var isShowingNewPage = false
     var body: some View {
-        GeometryReader { geometry in
-            NavigationView {
-                VStack {
-                    Spacer()
-                    
-                    Text("TrynGo")
-                        .font(.largeTitle)
+        NavigationStack {
+            GeometryReader { geometry in
+                ZStack {
+                    Image("home_bg")
+                        .resizable()
+                        .aspectRatio(CGSize(width: 3, height: 4), contentMode: .fill)
+                        .edgesIgnoringSafeArea(.all)
+                    VStack {
+                        Spacer()
+    //                    SecureField("密码", text: $password)
+    //                        .padding()
+    //                        .textFieldStyle(RoundedBorderTextFieldStyle())
+    //                        .padding()
+                        Spacer().frame(height: 300)
+                        Button(action: {
+                            isShowingNewPage.toggle()
+                        }) {
+                            Text("注册")
+                                .font(.headline)
+                                .padding()
+                                .frame(width: geometry.size.width * 0.4)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        Spacer().frame(height: 36)
+                        Button(action: {
+                            isShowingNewPage.toggle()
+                        }) {
+                            Text("登录")
+                                .font(.headline)
+                                .padding()
+                                .frame(width: geometry.size.width * 0.4)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .background(NavigationLink(destination: BlankPageView(), isActive: $isShowingNewPage, label: {
+                        }))
                         .padding()
-                    
-                    TextField("用户名", text: $username)
-                        .padding()
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
-                    
-                    SecureField("密码", text: $password)
-                        .padding()
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        isShowingNewPage.toggle()
-                    }) {
-                        Text("登录")
-                            .font(.headline)
-                            .padding()
-                            .frame(width: geometry.size.width * 0.5)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                        Spacer().frame(height: 156)
+                        NavigationLink(destination: Text("隐私协议")) {
+                            Text("隐私协议隐私协议隐私协议隐私协议隐私协议隐私协议")
+                                .font(.callout)
+                                .foregroundColor(.white)
+                        }
+                        Spacer().frame(height: 48)
                     }
-                    .background(NavigationLink(destination: BlankPageView(), isActive: $isShowingNewPage, label: {
-                        
-                    }))
                     .padding()
-                    
-                    NavigationLink(destination: Text("忘记密码页面")) {
-                        Text("忘记密码?")
-                            .foregroundColor(.blue)
-                    }
-                    Spacer()
                 }
-                .padding()
-                .navigationTitle("登录")
             }
         }
     }
 }
 
 struct BlankPageView: View {
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         VStack {
             Spacer()
-            
-            Text("欢迎")
+            Text("Hello world")
                 .font(.largeTitle)
                 .padding()
-            
             Spacer()
         }
-        .background(Color.gray)
-        .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
-            // 返回按钮的操作
-            // 设置isShowingNewPage为false，返回到登录页面
-            // 例如：isShowingNewPage = false
+            presentationMode.wrappedValue.dismiss()
         }) {
-            Text("返回")
-                .foregroundColor(.blue)
         })
-        .navigationBarTitle("欢迎页面", displayMode: .inline)
+        .navigationBarTitle("银河起点", displayMode: .automatic)
     }
 }
 
