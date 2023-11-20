@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "开始界面@2x.png",
+      "filename" : "home_icon@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "开始界面@3x.png",
+      "filename" : "home_icon@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

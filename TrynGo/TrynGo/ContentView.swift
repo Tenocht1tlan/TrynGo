@@ -17,28 +17,39 @@ struct ContentView: View {
                         .resizable()
                         .aspectRatio(CGSize(width: 3, height: 4), contentMode: .fill)
                         .edgesIgnoringSafeArea(.all)
-                    VStack {
+                    VStack(alignment: .center, content: {
                         Spacer()
-                        Spacer().frame(height: 300)
+                        Image("home_bg_icon")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 650, height: 380)
+                            .edgesIgnoringSafeArea(.all)
+                            .padding()
+                        Text("智绘银河")
+                            .font(.custom("Helvetica-Bold", size: 66))
+                            .frame(width: geometry.size.width * 0.6)
+                            .multilineTextAlignment(.center)
+                            .kerning(36)
+                            .foregroundColor(.white)
+                        Spacer().frame(height: 200)
                         Button(action: {
                             isShowingNewPage.toggle()
                         }) {
-                            Text("注册")
+                            Text("注 册")
                                 .font(.headline)
                                 .padding()
-                                .frame(width: geometry.size.width * 0.4)
+                                .frame(width: geometry.size.width * 0.35)
                                 .background(Color.blue)
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
-                        }
-                        Spacer().frame(height: 36)
+                        }.padding()
                         Button(action: {
                             isShowingNewPage.toggle()
                         }) {
-                            Text("登录")
+                            Text("登 录")
                                 .font(.headline)
                                 .padding()
-                                .frame(width: geometry.size.width * 0.4)
+                                .frame(width: geometry.size.width * 0.35)
                                 .background(Color.blue)
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
@@ -48,12 +59,12 @@ struct ContentView: View {
                         .padding()
                         Spacer().frame(height: 156)
                         NavigationLink(destination: Text("隐私协议")) {
-                            Text("隐私协议隐私协议隐私协议隐私协议隐私协议隐私协议")
+                            Text("您使用或继续使用，意味着同意按照《智绘银河隐私政策》收集、使用、储存、分享您的相关信息")
                                 .font(.callout)
                                 .foregroundColor(.white)
                         }
                         Spacer().frame(height: 48)
-                    }
+                    })
                     .padding()
                 }
             }
@@ -69,34 +80,43 @@ struct BlankPageView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        VStack {
-            Spacer()
-            MonthPicker()
-                .cornerRadius(18)
-                .frame(width: 240, height: 800)
-                .background(
-                    RoundedRectangle(cornerRadius: 18)
-                        .foregroundColor(.brown)
-                )
-            TextField("用户名", text: $username)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-                .frame(width: 600)
-            SecureField("密码", text: $password)
-                .padding()
-                .frame(width: 600)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            Spacer()
-            Button("确定") {
-                isRight = password == "swagger"
-            }
-            .frame(width: 180, height: 72)
-            .cornerRadius(18)
-            .border(.yellow, width: 2)
+        ZStack(alignment: .center, content: {
+            Image("home_bg")
+                .resizable()
+                .aspectRatio(CGSize(width: 3, height: 4), contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
             
-            Spacer()
-        }
+            VStack {
+                Spacer()
+                MonthPicker()
+                    .cornerRadius(18)
+                    .frame(width: 180, height: 240)
+                    .background(
+                        RoundedRectangle(cornerRadius: 18)
+                            .foregroundColor(.brown)
+                    )
+                TextField("用户名", text: $username)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                    .frame(width: 300)
+                SecureField("密码", text: $password)
+                    .padding()
+                    .frame(width: 300)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                Spacer()
+                Button("确 定") {
+                    isRight = password == "swagger"
+                }
+                .bold()
+                .frame(width: 180, height: 72)
+                .background(Color(hex: 0xffc700, alpha: 1))
+                .cornerRadius(18)
+                .foregroundColor(.white)
+                Spacer()
+            }
+        })
+        
         .navigationBarItems(leading: Button(action: {
             presentationMode.wrappedValue.dismiss()
         }) {
@@ -120,7 +140,7 @@ struct MonthPicker: View {
             .frame(height: 800)
             .background(
                 RoundedRectangle(cornerRadius: 0)
-                    .foregroundColor(Color.yellow)
+                    .foregroundColor(Color(hex: 0xffc700, alpha: 1))
                     .padding(8)
                     .frame(height: 50)
             )
@@ -132,4 +152,16 @@ struct MonthPicker: View {
 
 #Preview {
     ContentView()
+}
+
+extension Color {
+    init(hex: UInt, alpha: Double = 1.0) {
+        self.init(
+            .sRGB,
+            red: Double((hex & 0xFF0000) >> 16) / 255.0,
+            green: Double((hex & 0x00FF00) >> 8) / 255.0,
+            blue: Double(hex & 0x0000FF) / 255.0,
+            opacity: alpha
+        )
+    }
 }
