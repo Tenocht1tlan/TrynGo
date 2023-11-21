@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isShowingNewPage = false
+    
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
@@ -18,46 +18,55 @@ struct ContentView: View {
                         .aspectRatio(CGSize(width: 3, height: 4), contentMode: .fill)
                         .edgesIgnoringSafeArea(.all)
                     VStack(alignment: .center, content: {
+                        
                         Spacer()
+                        
                         Image("home_bg_icon")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 650, height: 380)
                             .edgesIgnoringSafeArea(.all)
                             .padding()
+                        
                         Text("智绘银河")
                             .font(.custom("Helvetica-Bold", size: 66))
                             .frame(width: geometry.size.width * 0.6)
                             .multilineTextAlignment(.center)
                             .kerning(36)
                             .foregroundColor(.white)
+                        
                         Spacer().frame(height: 200)
-                        Button(action: {
-                            isShowingNewPage.toggle()
-                        }) {
-                            Text("注 册")
-                                .font(.headline)
-                                .padding()
-                                .frame(width: geometry.size.width * 0.35)
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }.padding()
-                        Button(action: {
-                            isShowingNewPage.toggle()
-                        }) {
-                            Text("登 录")
-                                .font(.headline)
-                                .padding()
-                                .frame(width: geometry.size.width * 0.35)
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                        .background(NavigationLink(destination: BlankPageView(), isActive: $isShowingNewPage, label: {
-                        }))
+                        
+                        NavigationLink(
+                            destination: RegisterView(),
+                            label: {
+                                Text("注 册")
+                                    .font(.headline)
+                                    .padding()
+                                    .frame(width: geometry.size.width * 0.35)
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+                        )
                         .padding()
+                        
+                        NavigationLink(
+                            destination: RegisterView(),
+                            label: {
+                                Text("登 录")
+                                    .font(.headline)
+                                    .padding()
+                                    .frame(width: geometry.size.width * 0.35)
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+                        )
+                        .padding()
+                        
                         Spacer().frame(height: 156)
+                        
                         NavigationLink(destination: Text("隐私协议")) {
                             Text("您使用或继续使用，意味着同意按照《智绘银河隐私政策》收集、使用、储存、分享您的相关信息")
                                 .font(.callout)
@@ -72,7 +81,7 @@ struct ContentView: View {
     }
 }
 
-struct BlankPageView: View {
+struct RegisterView: View {
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var isRight = false
@@ -95,6 +104,7 @@ struct BlankPageView: View {
                         RoundedRectangle(cornerRadius: 18)
                             .foregroundColor(.brown)
                     )
+                Spacer()
                 TextField("用户名", text: $username)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
@@ -104,15 +114,6 @@ struct BlankPageView: View {
                     .frame(width: 300)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                Spacer()
-                Button("确 定") {
-                    isRight = password == "swagger"
-                }
-                .bold()
-                .frame(width: 180, height: 72)
-                .background(Color(hex: 0xffc700, alpha: 1))
-                .cornerRadius(18)
-                .foregroundColor(.white)
                 Spacer()
                 
                 NavigationLink(
