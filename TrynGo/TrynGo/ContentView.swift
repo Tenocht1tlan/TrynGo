@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  TrynGo
 //
-//  Created by 周阳 on 2023/11/7.
+//  Created by swagger on 2023/11/7.
 //
 
 import SwiftUI
@@ -114,14 +114,28 @@ struct BlankPageView: View {
                 .cornerRadius(18)
                 .foregroundColor(.white)
                 Spacer()
+                
+                NavigationLink(
+                    destination: HomeTabView(),
+                    label: {
+                        Text("Go To !")
+                            .bold()
+                            .frame(width: 180, height: 72)
+                            .background(Color(hex: 0xffc700, alpha: 1))
+                            .cornerRadius(18)
+                            .foregroundColor(.white)
+                    }
+                )
+                .padding()
+                
+                Spacer()
             }
         })
-        
+        .navigationBarTitle("银河起点", displayMode: .automatic)
         .navigationBarItems(leading: Button(action: {
             presentationMode.wrappedValue.dismiss()
         }) {
         })
-        .navigationBarTitle("银河起点", displayMode: .automatic)
     }
 }
 
@@ -147,6 +161,41 @@ struct MonthPicker: View {
             
         }
         .padding()
+    }
+}
+
+struct FirstTab: View {
+    let imageName : String
+    let title     : String
+    
+    var body: some View {
+        VStack {
+            Image("home_bg")
+                .resizable()
+                .aspectRatio(CGSize(width: 3, height: 4), contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
+        }
+        .tabItem {
+            VStack {
+                Image(imageName)
+                Text(title)
+                    .foregroundStyle(.white)
+                    .padding(.top, 4)
+            }
+        }
+    }
+}
+
+struct HomeTabView: View {
+    var body: some View {
+        TabView {
+            FirstTab(imageName: "home_tab_paint", title: "AI绘画")
+            FirstTab(imageName: "home_tab_paint", title: "AI绘画2")
+            FirstTab(imageName: "home_tab_paint", title: "AI绘画3")
+        }
+        .padding(.bottom)
+        .edgesIgnoringSafeArea(.bottom)
+        .accentColor(.white)
     }
 }
 
