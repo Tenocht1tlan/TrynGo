@@ -66,9 +66,16 @@ struct ContentView: View {
                         .padding()
                         
                         Spacer().frame(height: 156)
-                        
-                        NavigationLink(destination: Text("隐私协议")) {
-                            Text("您使用或继续使用，意味着同意按照《智绘银河隐私政策》收集、使用、储存、分享您的相关信息")
+                        HStack {
+                            Text("您使用或继续使用，意味着同意按照")
+                                .font(.callout)
+                                .foregroundColor(.white)
+                            
+                            Link("《智绘银河隐私政策》", destination: URL(string: "https://www.baidu.com")!)
+                                .font(.callout)
+                                .foregroundColor(.blue)
+                            
+                            Text("收集、使用、储存、分享您的相关信息")
                                 .font(.callout)
                                 .foregroundColor(.white)
                         }
@@ -81,9 +88,46 @@ struct ContentView: View {
     }
 }
 
+struct PrivacySheetView: View {
+    @Binding var isPresented: Bool
+    
+    var body: some View {
+        VStack {
+            Text("隐私政策")
+                .padding()
+            HStack {
+                Text("您使用或继续使用，意味着同意按照")
+                    .font(.callout)
+                    .foregroundColor(.white)
+                
+                Link("《智绘银河隐私政策》", destination: URL(string: "https://www.baidu.com")!)
+                    .font(.callout)
+                    .foregroundColor(.blue)
+                
+                Text("收集、使用、储存、分享您的相关信息")
+                    .font(.callout)
+                    .foregroundColor(.white)
+            }
+            HStack {
+                Button("同意并且进入") {
+                    isPresented = false
+                }
+                .padding()
+                
+                Button("拒绝并退出") {
+                    isPresented = false
+                }
+                .padding()
+                .foregroundColor(.red)
+            }
+        }
+        .background(Color(hex: 0x61597D))
+        .cornerRadius(100)
+        .padding()
+    }
+}
+
 struct RegisterView: View {
-    @State private var username: String = ""
-    @State private var password: String = ""
     @State private var isRight = false
     
     @Environment(\.presentationMode) var presentationMode
@@ -97,31 +141,25 @@ struct RegisterView: View {
             
             VStack {
                 Spacer()
+                Text("请选择你的年龄")
+                    .font(.custom("Helvetica-Bold", size: 56))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.white)
+                Spacer()
                 MonthPicker()
                     .cornerRadius(18)
-                    .frame(width: 180, height: 240)
+                    .frame(width:240)
                     .background(
                         RoundedRectangle(cornerRadius: 18)
-                            .foregroundColor(.brown)
+                            .foregroundColor(Color(hex: 0x584D85))
                     )
-                Spacer()
-                TextField("用户名", text: $username)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                    .frame(width: 300)
-                SecureField("密码", text: $password)
-                    .padding()
-                    .frame(width: 300)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                Spacer()
-                
                 NavigationLink(
                     destination: HomeTabView(),
                     label: {
-                        Text("Go To !")
+                        Text("确 定")
                             .bold()
-                            .frame(width: 180, height: 72)
+                            .frame(width: 240, height: 72)
                             .background(Color(hex: 0xffc700, alpha: 1))
                             .cornerRadius(18)
                             .foregroundColor(.white)
@@ -132,31 +170,35 @@ struct RegisterView: View {
                 Spacer()
             }
         })
-        .navigationBarTitle("银河起点", displayMode: .automatic)
+        .navigationBarTitle("", displayMode: .automatic)
+        .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
             presentationMode.wrappedValue.dismiss()
         }) {
+            Image(systemName: "arrow.left.circle")
         })
     }
 }
 
 struct MonthPicker: View {
     @State private var selectedMonthIndex = 5
-    let months = ["5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"]
+    let months = ["5", "6", "7", "8", "9", "10", "11", "12",
+                  "13", "14", "15", "16", "17", "18", "19", "20"]
     
     var body: some View {
         VStack {
-            Picker(selection: $selectedMonthIndex, label: Text("")) {
+            Picker(selection: $selectedMonthIndex, label: Text("年龄")) {
                 ForEach(0..<months.count) { index in
                     Text(months[index]).tag(index)
+                        .foregroundColor(.white)
+                        .bold()
                 }
             }
             .pickerStyle(.wheel)
-            .frame(height: 800)
             .background(
-                RoundedRectangle(cornerRadius: 0)
+                RoundedRectangle(cornerRadius: 8)
                     .foregroundColor(Color(hex: 0xffc700, alpha: 1))
-                    .padding(8)
+                    .padding(1)
                     .frame(height: 50)
             )
             
@@ -165,17 +207,52 @@ struct MonthPicker: View {
     }
 }
 
-struct FirstTab: View {
+struct CustomTabView : View {
     let imageName : String
     let title     : String
+    let margin = 64.0
     
     var body: some View {
         VStack {
-            Image("home_bg")
-                .resizable()
-                .aspectRatio(CGSize(width: 3, height: 4), contentMode: .fill)
-                .edgesIgnoringSafeArea(.all)
+            HStack {
+                Spacer().frame(width: margin)
+                VStack {
+                    Image("ai_enter_1")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                        .onTapGesture {
+                            print("Image 1 tapped!")
+                        }
+                    Text("进入AI绘画")
+                        .padding()
+                        .foregroundColor(.white)
+                        .font(.custom("Helvetica-Bold", size: 32))
+                }
+                Spacer().frame(width: margin)
+                VStack {
+                    Image("ai_enter_2")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                        .onTapGesture {
+                            print("Image 2 tapped!")
+                        }
+                    Text("画册")
+                        .padding()
+                        .foregroundColor(.white)
+                        .font(.custom("Helvetica-Bold", size: 32))
+                }
+                Spacer().frame(width: margin)
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            Image("ai_bg")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
+        )
         .tabItem {
             VStack {
                 Image(imageName)
@@ -188,15 +265,31 @@ struct FirstTab: View {
 }
 
 struct HomeTabView: View {
+    @Environment(\.presentationMode) var presentationMode
     var body: some View {
         TabView {
-            FirstTab(imageName: "home_tab_paint", title: "AI绘画")
-            FirstTab(imageName: "home_tab_paint", title: "AI绘画2")
-            FirstTab(imageName: "home_tab_paint", title: "AI绘画3")
+            CustomTabView(imageName: "tab_paint_unselect", title: "AI绘画")
+            CustomTabView(imageName: "tab_paint_unselect", title: "AI绘画2")
         }
         .padding(.bottom)
         .edgesIgnoringSafeArea(.bottom)
         .accentColor(.white)
+        .navigationBarTitle("", displayMode: .automatic)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }) {
+            Image(systemName: "arrow.left.circle")
+        })
+    }
+}
+
+struct PrivacyView: View {
+    
+    var body: some View {
+        VStack {
+            Text("隐私")
+        }
     }
 }
 
