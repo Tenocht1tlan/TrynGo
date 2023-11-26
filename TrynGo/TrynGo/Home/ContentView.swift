@@ -9,6 +9,7 @@ import SwiftUI
 
 let ScreenWidth = UIScreen.main.bounds.width
 let ScreenHeight = UIScreen.main.bounds.height
+let bgColor = Color(hex: 0xd0d0d0).opacity(0.2)
 
 struct ContentView: View {
     
@@ -83,10 +84,37 @@ struct ContentView: View {
     }
 }
 
-struct CustomTabView : View {
-    let imageName : String
-    let title     : String
-    let margin = 64.0
+struct PictureAlbTabView : View {
+    let margin    = 64.0
+    
+    var body: some View {
+        Grid {
+            GridRow {
+                Image("ai_enter_2")
+                Image("ai_enter_2")
+                Image("ai_enter_2")
+            }
+            .padding()
+            GridRow {
+                Image("ai_enter_2")
+                Image("ai_enter_2")
+                Image("ai_enter_2")
+            }
+            .padding()
+        }
+        .padding()
+        .frame(width: ScreenWidth, height: ScreenHeight)
+        .background(
+            Image("ai_bg")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
+        )
+    }
+}
+
+struct AIPaintTabView : View {
+    let margin    = 64.0
     
     var body: some View {
         NavigationStack {
@@ -130,33 +158,66 @@ struct CustomTabView : View {
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
         )
-        .tabItem {
-            VStack {
-                Image(imageName)
-                Text(title)
-                    .foregroundStyle(.white)
-            }
-        }
     }
 }
 
 struct HomeTabView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @State private var selectedIndex = 0
+    
     var body: some View {
-        TabView {
-            CustomTabView(imageName: "tab_paint_select", title: "AI绘画")
-            CustomTabView(imageName: "tab_paint_unselect", title: "AI绘画2")
-        }
-        .padding(.bottom)
-        .edgesIgnoringSafeArea(.bottom)
-        .accentColor(.white)
-        .navigationBarTitle("", displayMode: .automatic)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: {
-            presentationMode.wrappedValue.dismiss()
-        }) {
-            Image(systemName: "arrow.left.circle")
+        ZStack (alignment: .bottom, content: {
+            TabView(selection: $selectedIndex, content:  {
+                AIPaintTabView().tag(0)
+                PictureAlbTabView().tag(1)
+            })
+            .padding(.bottom)
+            .edgesIgnoringSafeArea(.bottom)
+            .accentColor(.white)
+            .navigationBarTitle("", displayMode: .automatic)
+            .navigationBarBackButtonHidden(true)
+            CustomTabBar(selectedIndex: $selectedIndex)
+                .frame(height: ScreenHeight * 0.1)
         })
+    }
+}
+
+struct CustomTabBar: View {
+    @Binding var selectedIndex: Int
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            TabBarButton(onName: "tab_paint_select", offName: "tab_paint_unselect", title: "AI绘画", index: 0, selectedIndex:$selectedIndex)
+            Spacer()
+            TabBarButton(onName: "tab_paint_select", offName: "tab_paint_unselect", title: "知识地图", index: 1, selectedIndex: $selectedIndex)
+            Spacer()
+        }
+        .padding()
+        .background(bgColor)
+    }
+}
+
+struct TabBarButton: View {
+    var onName: String
+    var offName: String
+    var title: String
+    var index: Int
+    @Binding var selectedIndex: Int
+
+    var body: some View {
+        Button(action: {
+            selectedIndex = index
+        }) {
+            VStack {
+                Spacer()
+                Image(index == selectedIndex ? onName : offName)
+                Spacer()
+                Text(title)
+                    .font(.footnote)
+                    .foregroundColor(.white)
+                Spacer()
+            }
+        }
     }
 }
 

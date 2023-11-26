@@ -9,17 +9,135 @@ import SwiftUI
 
 struct RegisterView: View {
     @State private var isRight = false
+    @State private var username: String = ""
+    @State private var password: String = ""
+    @FocusState private var isUnFocused : Bool
+    @FocusState private var isPwFocused : Bool
+    @FocusState private var isPwCFocused : Bool
+    
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        NavigationStack {
+            ZStack(alignment: .center, content: {
+                Image("ai_bg")
+                    .resizable()
+                    .aspectRatio(CGSize(width: 3, height: 4), contentMode: .fill)
+                    .edgesIgnoringSafeArea(.all)
+                VStack {
+                    Spacer().frame(height: 30)
+                    Image("home_bg_icon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: ScreenWidth * 0.35, height: ScreenHeight * 0.35)
+                    Text("欢迎加入我们！")
+                        .font(.custom("Helvetica-Bold", size: 48))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.white)
+                        .padding()
+                    
+                    Spacer().frame(height: 30)
+                    TextField("用户名", text: $username)
+                        .padding()
+                        .textFieldStyle(.plain)
+                        .padding([.leading, .trailing])
+                        .frame(width: ScreenWidth*0.35)
+                        .focused($isUnFocused)
+                        .background {
+                            ZStack(alignment: .leading, content: {
+                                bgColor
+                                if !isUnFocused {
+                                    Text("请输入账号")
+                                        .font(.title3)
+                                        .foregroundColor(.white)
+                                        .padding(EdgeInsets(top: 0, leading: 24, bottom: 0, trailing: 0))
+                                }
+                            })
+                        }
+                        .cornerRadius(28)
+                    Spacer().frame(height: 30)
+                    SecureField("密码", text: $password)
+                        .padding()
+                        .textFieldStyle(.plain)
+                        .padding([.leading, .trailing])
+                        .frame(width: ScreenWidth*0.35)
+                        .focused($isPwFocused)
+                        .background {
+                            ZStack(alignment: .leading, content: {
+                                bgColor
+                                if !isPwFocused {
+                                    Text("请输入密码")
+                                        .font(.title3)
+                                        .foregroundColor(.white)
+                                        .padding(EdgeInsets(top: 0, leading: 24, bottom: 0, trailing: 0))
+                                }
+                            })
+                        }
+                        .cornerRadius(28)
+                    Spacer().frame(height: 30)
+                    SecureField("确认密码", text: $password)
+                        .padding()
+                        .foregroundColor(.white)
+                        .textFieldStyle(.plain)
+                        .padding([.leading, .trailing])
+                        .frame(width: ScreenWidth*0.35)
+                        .focused($isPwCFocused)
+                        .background {
+                            ZStack(alignment: .leading, content: {
+                                bgColor
+                                if !isPwCFocused {
+                                    Text("请确认密码")
+                                        .font(.title3)
+                                        .foregroundColor(.white)
+                                        .padding(EdgeInsets(top: 0, leading: 24, bottom: 0, trailing: 0))
+                                }
+                            })
+                        }
+                        .cornerRadius(28)
+                    Spacer().frame(height: 30)
+                    NavigationLink(
+                        destination: RegisterAgeView(),
+                        label: {
+                            Text("注 册")
+                                .font(.title)
+                                .padding()
+                                .frame(width: ScreenWidth * 0.3)
+                                .background(Color(hex: 0xFFE26B))
+                                .foregroundColor(.black)
+                                .cornerRadius(36)
+                        }
+                    )
+                    .padding()
+                    
+                    Text("其他登录方式")
+                        .foregroundStyle(.white)
+                        .font(.title3)
+                    Spacer().frame(height: ScreenHeight*0.25)
+                }
+            })
+            .navigationBarTitle("", displayMode: .automatic)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Image("home_back")
+            })
+        }
+    }
+}
+
+struct RegisterAgeView: View {
+    @State private var isRight = false
     
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         ZStack(alignment: .center, content: {
-            Image("home_bg")
+            Image("ai_bg")
                 .resizable()
                 .aspectRatio(CGSize(width: 3, height: 4), contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
             HStack {
-                Spacer()
                 VStack {
                     Spacer()
                     Image("home_bg_icon")
@@ -34,33 +152,35 @@ struct RegisterView: View {
                         .foregroundColor(.white)
                     Spacer()
                 }
-                Spacer()
-                VStack {
-                    Spacer()
-                    MonthPicker()
-                        .cornerRadius(18)
-                        .frame(width:240)
-                        .background(
-                            RoundedRectangle(cornerRadius: 18)
-                                .foregroundColor(Color(hex: 0x584D85))
+                .frame(width: ScreenWidth/2)
+                ZStack {
+                    Color(hex: 0x584db5).opacity(0.4)
+                    VStack {
+                        Spacer()
+                        MonthPicker()
+                            .cornerRadius(18)
+                            .frame(width:240)
+                            .background(
+                                RoundedRectangle(cornerRadius: 18)
+                                    .foregroundColor(Color(hex: 0x584D85))
+                            )
+                            .padding()
+                        Spacer().frame(height: 50)
+                        NavigationLink(
+                            destination: HomeTabView(),
+                            label: {
+                                Text("确 定")
+                                    .bold()
+                                    .font(.title)
+                                    .frame(width: 240, height: 72)
+                                    .background(Color(hex: 0xffc700, alpha: 1))
+                                    .cornerRadius(24)
+                                    .foregroundColor(.white)
+                            }
                         )
-                        .padding()
-                    Spacer().frame(height: 50)
-                    NavigationLink(
-                        destination: HomeTabView(),
-                        label: {
-                            Text("确 定")
-                                .bold()
-                                .font(.title)
-                                .frame(width: 240, height: 72)
-                                .background(Color(hex: 0xffc700, alpha: 1))
-                                .cornerRadius(24)
-                                .foregroundColor(.white)
-                        }
-                    )
-                    Spacer()
+                        Spacer()
+                    }
                 }
-                Spacer()
             }
         })
         .navigationBarTitle("", displayMode: .automatic)
@@ -68,7 +188,7 @@ struct RegisterView: View {
         .navigationBarItems(leading: Button(action: {
             presentationMode.wrappedValue.dismiss()
         }) {
-            Image(systemName: "arrow.left.circle")
+            Image("home_back")
         })
     }
 }
