@@ -181,6 +181,28 @@ struct TGAIPaintView : View {
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
         )
+        .overlay(content: {
+            if showStyleSheet {
+                TGSheetGridView(onDismiss: {
+                    withAnimation {
+                        showStyleSheet = false
+                    }
+                }, images: styleArray, selectedIndex: $selectedStyleIndex)
+                .cornerRadius(24)
+                .frame(width: ScreenWidth*0.85, height: ScreenHeight*0.85)
+                .transition(.move(edge: .bottom))
+            }
+            if showScenceSheet {
+                TGSheetGridView(onDismiss: {
+                    withAnimation {
+                        showScenceSheet = false
+                    }
+                }, images: sceneArray, selectedIndex: $selectedSceneIndex)
+                .cornerRadius(24)
+                .frame(width: ScreenWidth*0.85, height: ScreenHeight*0.85)
+                .transition(.move(edge: .bottom))
+            }
+        })
         .navigationBarTitle("", displayMode: .automatic)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
@@ -192,46 +214,55 @@ struct TGAIPaintView : View {
 }
 
 struct TGSheetGridView: View {
-    @Environment(\.dismiss) var dismiss
-    
+    var onDismiss: () -> Void
     var images: [String]
-    @Binding var selectedIndex :Int
+    @Binding var selectedIndex : Int
     
     var body: some View {
-        ZStack {
-            Image("ai_sheetbg")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .edgesIgnoringSafeArea(.all)
-//                Image("ai_close_small")
-//                    .resizable()
-//                    .frame(width: 36, height: 36)
-//                    .aspectRatio(contentMode: .fill)
-//                    .onTapGesture {
-//                    dismiss()
-//                }
-                
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                ForEach(images.indices, id: \.self) { index in
-                    Image(images[index])
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: ScreenWidth*0.15, height: ScreenWidth*0.15)
-                        .cornerRadius(10)
-                        .onTapGesture {
-                            selectedIndex = index
-                            dismiss()
+        GeometryReader(content: { geometry in
+            ZStack {
+                Image("ai_sheetbg")
+                    .resizable()
+                    .edgesIgnoringSafeArea(.all)
+                    .overlay(alignment: .topTrailing, content: {
+                        Image("ai_close_small")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
+                            .offset(x: -32, y: 32)
+                            .onTapGesture {
+                                onDismiss()
+                            }
+                    })
+                let w = (geometry.size.width - 80) / 3
+                Grid {
+                    ForEach(0..<2) { row in
+                        GridRow {
+                            ForEach(0..<3) { col in
+                                let index = row * 3 + col
+                                Image(images[index])
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: w, height: w)
+                                    .cornerRadius(10)
+                                    .onTapGesture {
+                                        selectedIndex = index
+                                        onDismiss()
+                                    }
+                            }
                         }
+                    }
+                    
                 }
             }
-            .frame(width: ScreenWidth*0.5, height: ScreenHeight)
-        }
+        })
     }
 }
 
-
 struct AIGeneratingView : View {
+    
     @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         ZStack {
             Image("ai_bg")
@@ -263,7 +294,7 @@ struct AIGeneratingView : View {
 
 struct SenceCardView: View {
     @Binding var selectedStyleIndex : Int
-    @Binding var isShow :Bool
+    @Binding var isShow : Bool
     var styleArray : [String]
     var title : String
     var btnImage : String
@@ -272,16 +303,15 @@ struct SenceCardView: View {
     var body: some View {
         VStack {
             Button(title) {
-                isShow = true
+                withAnimation {
+                    isShow.toggle()
+                }
             }
             .font(.title2)
             .background(Image(btnImage))
             .frame(width: styleWidth, height: 45)
             .cornerRadius(16)
             .padding()
-            .sheet(isPresented: $isShow, content: {
-                TGSheetGridView(images: styleArray, selectedIndex:$selectedStyleIndex)
-            })
             ZStack {
                 Rectangle()
                     .frame(width: 150, height: 150)

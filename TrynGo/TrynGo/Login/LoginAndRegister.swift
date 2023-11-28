@@ -11,6 +11,7 @@ struct RegisterView: View {
     @State private var isRight = false
     @State private var username: String = ""
     @State private var password: String = ""
+    @State private var conformPw: String = ""
     @FocusState private var isUnFocused : Bool
     @FocusState private var isPwFocused : Bool
     @FocusState private var isPwCFocused : Bool
@@ -43,10 +44,11 @@ struct RegisterView: View {
                         .padding([.leading, .trailing])
                         .frame(width: ScreenWidth*0.35)
                         .focused($isUnFocused)
+                        .foregroundColor(.white)
                         .background {
                             ZStack(alignment: .leading, content: {
                                 bgColor
-                                if !isUnFocused {
+                                if !isUnFocused && username.isEmpty {
                                     Text("请输入账号")
                                         .font(.title3)
                                         .foregroundColor(.white)
@@ -58,6 +60,7 @@ struct RegisterView: View {
                     Spacer().frame(height: 30)
                     SecureField("密码", text: $password)
                         .padding()
+                        .foregroundColor(.white)
                         .textFieldStyle(.plain)
                         .padding([.leading, .trailing])
                         .frame(width: ScreenWidth*0.35)
@@ -65,7 +68,7 @@ struct RegisterView: View {
                         .background {
                             ZStack(alignment: .leading, content: {
                                 bgColor
-                                if !isPwFocused {
+                                if !isPwFocused && password.isEmpty {
                                     Text("请输入密码")
                                         .font(.title3)
                                         .foregroundColor(.white)
@@ -75,7 +78,7 @@ struct RegisterView: View {
                         }
                         .cornerRadius(28)
                     Spacer().frame(height: 30)
-                    SecureField("确认密码", text: $password)
+                    SecureField("确认密码", text: $conformPw)
                         .padding()
                         .foregroundColor(.white)
                         .textFieldStyle(.plain)
@@ -85,7 +88,7 @@ struct RegisterView: View {
                         .background {
                             ZStack(alignment: .leading, content: {
                                 bgColor
-                                if !isPwCFocused {
+                                if !isPwCFocused && conformPw.isEmpty {
                                     Text("请确认密码")
                                         .font(.title3)
                                         .foregroundColor(.white)
