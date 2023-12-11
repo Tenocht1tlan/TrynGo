@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @State private var isRight = false
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var conformPw: String = ""
@@ -101,18 +100,18 @@ struct RegisterView: View {
                     NavigationLink(
                         destination: RegisterAgeView(),
                         label: {
-                            Text("注 册")
+                            Text(tipsString())
                                 .font(.title)
                                 .padding()
                                 .frame(width: ScreenWidth * 0.3)
-                                .background(Color(hex: 0xFFE26B))
+                                .background(isPwRight() ? Color(hex: 0xFFE26B) : Color.gray)
                                 .foregroundColor(.black)
                                 .cornerRadius(36)
                         }
                     )
+                    .disabled(!isPwRight())
                     .padding()
-                    
-                    Text("其他登录方式")
+                    Text("- 其他登录方式 -")
                         .foregroundStyle(.white)
                         .font(.title3)
                     Spacer().frame(height: ScreenHeight*0.25)
@@ -127,6 +126,27 @@ struct RegisterView: View {
             })
         }
     }
+    
+    private func isPwRight() -> Bool {
+        return !username.isEmpty && !password.isEmpty && !conformPw.isEmpty && conformPw == password && password.count > 5
+    }
+    
+    private func tipsString() -> String {
+        var str = "注 册"
+        if isPwCFocused || isPwFocused || isUnFocused {
+            if username.isEmpty {
+                str = "账号不能为空"
+            } else if password.isEmpty {
+                str = "密码不能为空"
+            } else if password.count < 6 {
+                str = "密码至少6位"
+            } else if conformPw != password {
+                str = "请再次确认密码"
+            }
+        }
+        return str
+    }
+    
 }
 
 struct RegisterAgeView: View {

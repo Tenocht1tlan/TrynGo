@@ -44,6 +44,27 @@ struct TGAIPaintView : View {
         return width
     }
     
+    private func cropImage(withAspectRatio aspectRatio: CGFloat) -> UIImage? {
+        guard let originalImage = selectedImage else {
+            return nil
+        }
+        let size = CGSize(width: 500, height: 500)//originalImage.size
+        var image: UIImage?
+        UIGraphicsImageRenderer(size: size).image { _ in
+            originalImage.draw(in: CGRect(origin: .zero, size: size))
+            // Create a rectangular path with the specified aspect ratio for clipping
+//            let pathRect = CGRect(x: 0, y: 0, width: size.width*aspectRatio, height: size.height)
+            
+            let pathWidth = min(size.width, size.height * aspectRatio)
+            let pathHeight = size.height //min(size.height, size.width / aspectRatio)
+            let pathRect = CGRect(x: (size.width - pathWidth) / 2, y: (size.height - pathHeight) / 2, width: pathWidth, height: pathHeight)
+            let path = UIBezierPath(rect: pathRect)
+            path.addClip()
+            image = UIGraphicsGetImageFromCurrentImageContext()
+        }
+        return image
+    }
+    
     var body: some View {
         VStack (alignment: .center, content: {
             Spacer()
@@ -109,6 +130,8 @@ struct TGAIPaintView : View {
                                 .padding()
                                 .onTapGesture {
                                     selectedRatioIndex = index
+                                    let ratio = sizeRatio[selectedRatioIndex-1]
+                                    selectedImage = cropImage(withAspectRatio: ratio)
                                 }
                         }
                     }
@@ -218,6 +241,12 @@ struct TGSheetGridView: View {
     var images: [String]
     @Binding var selectedIndex : Int
     
+    init(onDismiss: @escaping () -> Void, images: [String], selectedIndex: Binding<Int> = .constant(0)) {
+        self.onDismiss = onDismiss
+        self.images = images
+        _selectedIndex = selectedIndex
+    }
+    
     var body: some View {
         GeometryReader(content: { geometry in
             ZStack {
@@ -252,7 +281,6 @@ struct TGSheetGridView: View {
                             }
                         }
                     }
-                    
                 }
             }
         })

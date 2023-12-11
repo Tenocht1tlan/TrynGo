@@ -133,15 +133,12 @@ struct AIPaintTabView : View {
                     }
                 }
                 Spacer().frame(width: margin * 2.5)
-                NavigationLink(destination: TGAIPaintView()) {
+                NavigationLink(destination: TGAlbumView()) {
                     VStack {
                         Image("ai_enter_2")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .padding()
-                            .onTapGesture {
-                                print("Image 2 tapped!")
-                            }
                         Text("画册")
                             .padding()
                             .foregroundColor(.white)
@@ -222,5 +219,5 @@ struct TabBarButton: View {
 }
 
 #Preview {
-    HomeTabView()
+    ContentView()
 }
